@@ -1,0 +1,13 @@
+{
+  "name": "pweb-ts-p01-2026",
+  "version": "1.0.0",
+  "description": "Aplikasi antrian rumah sakit (HTML + TypeScript native)",
+  "type": "module",
+  "scripts": {
+    "bangun": "tsc",
+    "pantau": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

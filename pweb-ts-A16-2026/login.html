@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Masuk - Antrian Rumah Sakit</title>
+    <link rel="stylesheet" href="css/login.css" />
+    <!-- type="module" supaya file TS boleh saling import; atribut defer tetap dipasang sesuai soal -->
+    <script type="module" src="dist/login.js" defer></script>
+  </head>
+  <body>
+    <main class="halaman-masuk">
+      <section class="kartu-masuk" aria-labelledby="judul-masuk">
+        <h1 id="judul-masuk">Masuk</h1>
+        <p class="keterangan">
+          Halaman ini untuk mengakses Dashboard Admin dan Panel Operator.
+          Layar Kiosk tidak memerlukan login.
+        </p>
+
+        <form id="form-masuk" novalidate>
+          <div class="bidang">
+            <label for="input-username">Username</label>
+            <input
+              id="input-username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              placeholder="mis. emilys"
+              required
+            />
+          </div>
+
+          <div class="bidang">
+            <label for="input-password">Password</label>
+            <input
+              id="input-password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <!-- Pesan error muncul di sini. role="alert" supaya dibacakan pembaca layar. -->
+          <p id="pesan-error" class="pesan-error" role="alert" hidden></p>
+
+          <button id="tombol-masuk" class="tombol-utama" type="submit">Masuk</button>
+        </form>
+
+        <p class="petunjuk">
+          Gunakan akun uji dari
+          <a href="https://dummyjson.com/users" target="_blank" rel="noopener noreferrer">dummyjson.com/users</a>
+          (contoh username/password tercantum di sana).
+        </p>
+
+        <p class="tautan-publik">
+          Pengunjung? <a href="ambil-antrian.html">Ambil nomor antrian</a>
+          atau <a href="layar.html">lihat layar antrian</a>.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

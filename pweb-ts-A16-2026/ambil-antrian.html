@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ambil Nomor Antrian - Rumah Sakit</title>
+    <link rel="stylesheet" href="css/ambilAntrian.css" />
+    <script type="module" src="dist/ambilAntrian.js" defer></script>
+  </head>
+  <body>
+    <div class="halaman">
+      <header class="kepala">
+        <div>
+          <h1>Ambil nomor antrian</h1>
+          <p class="keterangan">Pilih jenis layanan, lalu ambil nomor antrian Anda.</p>
+        </div>
+        <nav class="navigasi" aria-label="Navigasi halaman publik">
+          <a class="tautan-nav" href="layar.html">Layar antrian</a>
+          <a class="tautan-nav aktif" href="ambil-antrian.html" aria-current="page">Ambil nomor</a>
+          <a class="tautan-nav" href="login.html">Masuk petugas</a>
+        </nav>
+      </header>
+
+      <!-- Pesan galat saat pengambilan nomor gagal -->
+      <p id="pesan-ambil" class="pesan-error" role="alert" hidden></p>
+
+      <!-- Kartu jenis antrian diisi oleh ambilAntrian.ts -->
+      <main>
+        <div id="daftar-jenis" class="daftar-jenis"></div>
+
+        <div id="keadaan-kosong" class="keadaan-kosong" hidden>
+          <p class="judul-kosong">Belum ada layanan yang dibuka.</p>
+          <p>Minta petugas mengaktifkan jenis antrian dari Dashboard Admin. Daftar ini akan terisi sendiri.</p>
+        </div>
+      </main>
+
+      <p class="catatan-kaki">Daftar layanan diperbarui otomatis setiap 3 detik. Tidak perlu memuat ulang halaman.</p>
+    </div>
+
+    <!-- Kotak hasil: menampilkan nomor tiket yang baru diambil -->
+    <dialog id="dialog-tiket" class="dialog-tiket" aria-labelledby="judul-dialog">
+      <h2 id="judul-dialog">Nomor antrian Anda</h2>
+      <p id="nomor-tiket-hasil" class="nomor-besar">A-001</p>
+      <p id="rincian-tiket-hasil" class="rincian-tiket"></p>
+      <p class="saran-tiket">Simpan atau foto nomor ini, lalu pantau panggilan di layar antrian.</p>
+      <button id="tombol-tutup-dialog" class="tombol-utama" type="button">Tutup</button>
+    </dialog>
+  </body>
+</html>

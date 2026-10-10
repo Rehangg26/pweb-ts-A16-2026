@@ -1,0 +1,167 @@
+/* ============================================================
+   login.css - milik Reyhan
+   Mandiri: tidak bergantung pada dasar.css milik Rido.
+   ============================================================ */
+
+:root {
+  --latar: #f3f4f6;
+  --kartu: #ffffff;
+  --teks: #1f2937;
+  --teks-redup: #5b6472;
+  --garis: #d5d9e0;
+  --aksen: #ff9f1c;
+  --aksen-hover: #f29300;
+  --aksen-pudar: #ffd9a3;
+  --teks-di-aksen: #2b1a00;
+  --galat: #b42318;
+  --galat-latar: #fef3f2;
+  --galat-garis: #fecdca;
+  --fokus: #1d4ed8;
+  --radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: var(--latar);
+  color: var(--teks);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.halaman-masuk {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.kartu-masuk {
+  width: 100%;
+  max-width: 400px;
+  padding: 28px 24px;
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: 12px;
+}
+
+.kartu-masuk h1 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.keterangan {
+  margin: 0 0 20px;
+  color: var(--teks-redup);
+  font-size: 0.9rem;
+}
+
+.bidang {
+  margin-bottom: 14px;
+}
+
+.bidang label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.bidang input {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit; /* 16px agar iOS tidak zoom otomatis */
+  color: var(--teks);
+  background: #fff;
+  border: 1px solid var(--garis);
+  border-radius: var(--radius);
+}
+
+.bidang input::placeholder {
+  color: #8a93a1;
+}
+
+.bidang input:disabled {
+  background: #f3f4f6;
+  color: var(--teks-redup);
+}
+
+.bidang input[aria-invalid="true"] {
+  border-color: var(--galat);
+}
+
+.bidang input:focus-visible,
+.tombol-utama:focus-visible,
+.kartu-masuk a:focus-visible {
+  outline: 2px solid var(--fokus);
+  outline-offset: 2px;
+}
+
+.pesan-error {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  color: var(--galat);
+  background: var(--galat-latar);
+  border: 1px solid var(--galat-garis);
+  border-radius: var(--radius);
+}
+
+.tombol-utama {
+  width: 100%;
+  padding: 11px 16px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--teks-di-aksen);
+  background: var(--aksen);
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.tombol-utama:hover:not(:disabled) {
+  background: var(--aksen-hover);
+}
+
+/* Keadaan memuat: tombol memudar jadi oranye muda dan tidak bisa diklik */
+.tombol-utama:disabled {
+  background: var(--aksen-pudar);
+  cursor: progress;
+}
+
+.petunjuk {
+  margin: 18px 0 0;
+  color: var(--teks-redup);
+  font-size: 0.8rem;
+}
+
+.tautan-publik {
+  margin: 10px 0 0;
+  color: var(--teks-redup);
+  font-size: 0.8rem;
+}
+
+.kartu-masuk a {
+  color: #1a4fb3;
+}
+
+@media (max-width: 420px) {
+  .kartu-masuk {
+    padding: 22px 18px;
+  }
+}
