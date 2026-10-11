@@ -1,0 +1,185 @@
+/* css/operator.css */
+:root {
+  --warna-utama: #f59e0b;
+  --warna-utama-hover: #d97706;
+  --warna-latar: #f8fafc;
+  --warna-kartu: #ffffff;
+  --warna-teks: #1e293b;
+  --warna-sekunder: #64748b;
+  --warna-border: #e2e8f0;
+  --warna-bahaya: #ef4444;
+}
+
+body {
+  background-color: var(--warna-latar);
+  color: var(--warna-teks);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.kontainer-operator {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header-operator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--warna-border);
+}
+
+.judul-operator {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subjudul-operator {
+  color: var(--warna-sekunder);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.tombol-keluar {
+  background-color: transparent;
+  border: 1px solid var(--warna-border);
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--warna-teks);
+}
+
+.tombol-keluar:hover {
+  background-color: #f1f5f9;
+}
+
+.grid-operator {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.kartu-operator {
+  background: var(--warna-kartu);
+  border: 1px solid var(--warna-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-kartu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nama-jenis {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.jumlah-menunggu {
+  font-size: 0.875rem;
+  color: var(--warna-sekunder);
+}
+
+.area-nomor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--warna-border);
+  border-bottom: 1px solid var(--warna-border);
+}
+
+.label-sub {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--warna-sekunder);
+  text-transform: uppercase;
+}
+
+.nomor-panggil {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--warna-utama);
+  margin-top: 0.25rem;
+}
+
+.nomor-berikutnya {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--warna-teks);
+  margin-top: 0.25rem;
+}
+
+.label-prioritas {
+  font-size: 0.75rem;
+  color: var(--warna-sekunder);
+  margin-top: 0.25rem;
+}
+
+.grup-tombol {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tombol-aksi {
+  flex: 1;
+  padding: 0.625rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.tombol-panggil {
+  background-color: var(--warna-utama);
+  color: white;
+}
+
+.tombol-panggil:hover {
+  background-color: var(--warna-utama-hover);
+}
+
+.tombol-selesai {
+  background-color: white;
+  border-color: var(--warna-border);
+  color: var(--warna-teks);
+}
+
+.tombol-selesai:hover {
+  background-color: #f1f5f9;
+}
+
+.tombol-lewati {
+  background-color: white;
+  border-color: var(--warna-bahaya);
+  color: var(--warna-bahaya);
+}
+
+.tombol-lewati:hover {
+  background-color: #fef2f2;
+}
+
+.tombol-aksi:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pesan-kosong {
+  font-size: 0.875rem;
+  color: var(--warna-sekunder);
+  font-style: italic;
+  margin: 0;
+}

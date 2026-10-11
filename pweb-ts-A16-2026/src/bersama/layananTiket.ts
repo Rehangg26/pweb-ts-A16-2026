@@ -1,35 +1,51 @@
-// ============================================================
-// SEMENTARA - versi minimal supaya halaman Ambil Antrian milik Reyhan bisa diuji.
-// Versi ASLI milik RIDO. Saat merge, pakai punya Rido (jangan commit file ini).
-//
-// Kesepakatan yang dipakai Reyhan (Rido tolong samakan):
+// src/bersama/layananTiket.ts
+
+// yang di bawah ini sudah ada semua
 //  - buatTiket(idJenis, prioritas) MENGEMBALIKAN Tiket,
 //    dan MELEMPAR Error (pesan Indonesia) kalau jenis tidak ada / nonaktif.
-//  - ambilJenisAktif() mengembalikan hanya jenis yang aktif.
-// ============================================================
+//  - ambilJenisAktif() mengembalikan hanya jenis yang aktif. 
 
-import type { JenisAntrian, Prioritas, Tiket } from "./tipe.js";
+import type { JenisAntrian, Prioritas, StatusTiket, Tiket } from "./tipe.js";
 import { bacaData, simpanData } from "./penyimpanan.js";
 
 const KUNCI_JENIS = "jenis_antrian";
 const KUNCI_TIKET = "daftar_tiket";
 const KUNCI_PENGHITUNG = "penghitung_tiket";
 
-/** Contoh: formatNomorTiket("A", 1) -> "A-001" */
+// Bobot hirarki prioritas panggilan
+const BOBOT_PRIORITAS: Record<Prioritas, number> = {
+  vip: 4,
+  disabilitas: 3,
+  lansia: 2,
+  normal: 1,
+};
+
+/** Format nomor tiket menjadi 3 digit (contoh: "A-001") */
 export function formatNomorTiket(kode: string, urutan: number): string {
-  return `${kode}-${String(urutan).padStart(3, "0")}`;
+  return `${kode.toUpperCase()}-${String(urutan).padStart(3, "0")}`;
 }
 
+/** Mengambil seluruh daftar jenis antrian */
+export function ambilSemuaJenis(): JenisAntrian[] {
+  return bacaData<JenisAntrian[]>(KUNCI_JENIS, []);
+}
+
+/** Mengambil hanya jenis antrian yang statusnya aktif */
 export function ambilJenisAktif(): JenisAntrian[] {
-  return bacaData<JenisAntrian[]>(KUNCI_JENIS, []).filter((jenis) => jenis.aktif);
+  return ambilSemuaJenis().filter((jenis) => jenis.aktif);
 }
 
+/** Mengambil seluruh daftar tiket */
+export function ambilSemuaTiket(): Tiket[] {
+  return bacaData<Tiket[]>(KUNCI_TIKET, []);
+}
+
+/** Membuat tiket baru (melempar Error jika jenis antrian tidak ditemukan/nonaktif) */
 export function buatTiket(idJenis: string, prioritas: Prioritas): Tiket {
-  const jenis = bacaData<JenisAntrian[]>(KUNCI_JENIS, []).find((j) => j.id === idJenis);
+  const jenis = ambilSemuaJenis().find((j) => j.id === idJenis);
   if (!jenis) throw new Error("Jenis antrian tidak ditemukan.");
   if (!jenis.aktif) throw new Error(`Jenis antrian ${jenis.nama} sedang tidak aktif.`);
 
-  // Baca ulang tepat sebelum mengubah, lalu langsung simpan (aturan kerja no. 3).
   const penghitung = bacaData<Record<string, number>>(KUNCI_PENGHITUNG, {});
   const urutan = (penghitung[idJenis] ?? 0) + 1;
   penghitung[idJenis] = urutan;
@@ -37,7 +53,7 @@ export function buatTiket(idJenis: string, prioritas: Prioritas): Tiket {
 
   const nomorTiket = formatNomorTiket(jenis.kode, urutan);
   const dibuatPada = Date.now();
-  const tiket: Tiket = {
+  const tiketBaru: Tiket = {
     id: `${nomorTiket}-${dibuatPada}`,
     idJenis,
     urutan,
@@ -47,9 +63,58 @@ export function buatTiket(idJenis: string, prioritas: Prioritas): Tiket {
     dibuatPada,
   };
 
-  const daftar = bacaData<Tiket[]>(KUNCI_TIKET, []);
-  daftar.push(tiket);
+  const daftar = ambilSemuaTiket();
+  daftar.push(tiketBaru);
   simpanData(KUNCI_TIKET, daftar);
 
-  return tiket;
+  return tiketBaru;
+}
+
+/** Mengurutkan daftar tiket berdasarkan bobot prioritas tertinggi & waktu pendaftaran awal */
+export function urutkanBerdasarkanPrioritas(daftarTiket: Tiket[]): Tiket[] {
+  return [...daftarTiket].sort((a, b) => {
+    const bobotA = BOBOT_PRIORITAS[a.prioritas] ?? 0;
+    const bobotB = BOBOT_PRIORITAS[b.prioritas] ?? 0;
+
+    if (bobotA !== bobotB) {
+      return bobotB - bobotA; // Prioritas lebih tinggi didahulukan
+    }
+    return a.urutan - b.urutan; // Urutan terkecil didahulukan
+  });
+}
+
+/** Mengambil tiket yang sedang dipanggil saat ini untuk jenis antrian tertentu */
+export function ambilTiketDipanggil(idJenis: string): Tiket | null {
+  const daftar = ambilSemuaTiket();
+  return daftar.find((t) => t.idJenis === idJenis && t.status === "dipanggil") ?? null;
+}
+
+/** Mengambil tiket antrian 'menunggu' berikutnya berdasarkan urutan prioritas */
+export function ambilTiketBerikutnya(idJenis: string): Tiket | null {
+  const daftar = ambilSemuaTiket();
+  const tiketMenunggu = daftar.filter((t) => t.idJenis === idJenis && t.status === "menunggu");
+  if (tiketMenunggu.length === 0) return null;
+
+  const terurut = urutkanBerdasarkanPrioritas(tiketMenunggu);
+  return terurut[0] ?? null;
+}
+
+/** Menghitung jumlah tiket yang masih 'menunggu' untuk jenis antrian tertentu */
+export function hitungSisaAntrean(idJenis: string): number {
+  const daftar = ambilSemuaTiket();
+  return daftar.filter((t) => t.idJenis === idJenis && t.status === "menunggu").length;
+}
+
+/** Mengubah status tiket berdasarkan ID tiket */
+export function ubahStatusTiket(idTiket: string, statusBaru: StatusTiket): void {
+  const daftar = ambilSemuaTiket();
+  const tiket = daftar.find((t) => t.id === idTiket);
+
+  if (tiket) {
+    tiket.status = statusBaru;
+    if (statusBaru === "dipanggil") {
+      tiket.dipanggilPada = Date.now();
+    }
+    simpanData(KUNCI_TIKET, daftar);
+  }
 }
