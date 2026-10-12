@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin — Antrian Rumah Sakit</title>
+  <link rel="stylesheet" href="dasar.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="halaman" id="halaman-admin" hidden>
+    <header class="kepala">
+      <div>
+        <h1>Dashboard Admin</h1>
+        <p class="subjudul">Reset setiap hari agar penomoran antrian mulai dari awal.</p>
+      </div>
+      <div class="aksi-kepala">
+        <span class="chip-pengguna">
+          <span id="navbar-nama"></span>
+          <span id="navbar-peran" class="lencana"></span>
+        </span>
+        <button id="tombol-data-contoh" type="button" class="tombol hantu">Data Contoh</button>
+        <button id="tombol-reset" type="button" class="tombol bahaya-garis">Reset Antrian</button>
+        <button id="tombol-keluar" type="button" class="tombol garis">Keluar</button>
+      </div>
+    </header>
+
+    <p id="pesan-aksi" class="pesan" role="status"></p>
+
+    <main class="tata-letak">
+      <section class="kartu">
+        <h2>Jenis antrian</h2>
+        <form id="form-jenis" class="form-baris">
+          <label class="bidang kode">
+            <span>Kode</span>
+            <input id="input-kode" type="text" maxlength="1" placeholder="A" autocomplete="off" required>
+          </label>
+          <label class="bidang nama">
+            <span>Nama</span>
+            <input id="input-nama" type="text" placeholder="Contoh: Farmasi" autocomplete="off" required>
+          </label>
+          <button type="submit" class="tombol gelap">Tambah</button>
+        </form>
+        <p id="pesan-jenis" class="pesan" role="status"></p>
+        <div id="daftar-jenis" class="daftar"></div>
+      </section>
+
+      <section class="kartu">
+        <h2>Terbitkan tiket</h2>
+        <form id="form-tiket-manual" class="form-baris">
+          <label class="bidang jenis">
+            <span>Jenis antrian</span>
+            <select id="pilih-jenis-manual" required></select>
+          </label>
+          <label class="bidang prioritas">
+            <span>Prioritas</span>
+            <select id="pilih-prioritas">
+              <option value="normal">Normal</option>
+              <option value="lansia">Lansia</option>
+              <option value="disabilitas">Disabilitas</option>
+              <option value="vip">VIP</option>
+            </select>
+          </label>
+          <button type="submit" class="tombol gelap">Terbitkan</button>
+        </form>
+        <p id="pesan-tiket" class="pesan" role="status"></p>
+        <div id="daftar-tiket"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="dist/admin.js" defer></script>
+</body>
+</html>
