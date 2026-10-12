@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layar Antrian - Rumah Sakit</title>
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/layar.css">
+  <script type="module" src="dist/layar.js" defer></script>
+</head>
+<body>
+  <div class="kontainer-layar">
+    <header class="header-layar">
+      <div>
+        <h1 class="judul-layar">Nomor sedang dipanggil</h1>
+        <p id="waktu-diperbarui" class="subjudul-layar">Diperbarui: -</p>
+      </div>
+      <div class="grup-navigasi">
+        <a href="layar.html" class="tombol-nav aktif">Layar Antrian</a>
+        <a href="ambil-antrian.html" class="tombol-nav">Ambil Nomor</a>
+        <button id="tombol-layar-penuh" class="tombol-nav">Layar Penuh</button>
+      </div>
+    </header>
+
+    <main id="kontainer-kartu-layar" class="grid-layar">
+      <!-- Tampilan nomor yang sedang dipanggil dirender dinamis -->
+    </main>
+  </div>
+</body>
+</html>

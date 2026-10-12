@@ -1,0 +1,127 @@
+/* css/layar.css */
+:root {
+  --warna-utama: #f59e0b;
+  --warna-latar: #f8fafc;
+  --warna-kartu: #ffffff;
+  --warna-teks: #1e293b;
+  --warna-sekunder: #64748b;
+  --warna-border: #e2e8f0;
+}
+
+body {
+  background-color: var(--warna-latar);
+  color: var(--warna-teks);
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.kontainer-layar {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-layar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.judul-layar {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subjudul-layar {
+  font-size: 0.875rem;
+  color: var(--warna-sekunder);
+  margin-top: 0.25rem;
+}
+
+.grup-navigasi {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.tombol-nav {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--warna-border);
+  background: white;
+  color: var(--warna-teks);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tombol-nav.aktif {
+  background-color: var(--warna-teks);
+  color: white;
+  border-color: var(--warna-teks);
+}
+
+.grid-layar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.kartu-layar {
+  background-color: var(--warna-kartu);
+  border: 1px solid var(--warna-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 260px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-jenis-layar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nama-jenis-layar {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.kode-jenis-layar {
+  color: var(--warna-sekunder);
+  font-weight: 600;
+}
+
+.badge-dipanggil {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--warna-utama);
+  text-transform: uppercase;
+  margin-top: 1rem;
+}
+
+.nomor-panggil-besar {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--warna-teks);
+  margin: 0.5rem 0;
+}
+
+.nomor-kosong-layar {
+  font-size: 0.95rem;
+  color: var(--warna-sekunder);
+  margin: 2rem 0;
+}
+
+.footer-layar {
+  font-size: 0.875rem;
+  color: var(--warna-sekunder);
+  border-top: 1px solid var(--warna-border);
+  padding-top: 0.75rem;
+}
