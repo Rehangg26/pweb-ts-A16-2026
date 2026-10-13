@@ -1,13 +1,11 @@
-// src/layar.ts
+
 import {
   ambilJenisAktif,
   ambilTiketDipanggil,
   hitungSisaAntrean,
 } from "./bersama/layananTiket.js";
 
-/**
- * Merender nomor yang sedang dipanggil secara real-time
- */
+
 export function perbaruiLayar(): void {
   const kontainerKartu = document.getElementById("kontainer-kartu-layar");
   const elemenWaktu = document.getElementById("waktu-diperbarui");
@@ -56,9 +54,6 @@ export function perbaruiLayar(): void {
   }
 }
 
-/**
- * Memulai polling interval setiap 2 detik
- */
 export function mulaiPolling(): void {
   perbaruiLayar();
   setInterval(() => {
@@ -66,9 +61,7 @@ export function mulaiPolling(): void {
   }, 2000);
 }
 
-/**
- * Mengatur tombol Layar Penuh (Fullscreen API)
- */
+
 export function aturLayarPenuh(): void {
   const tombol = document.getElementById("tombol-layar-penuh");
   if (!tombol) return;
@@ -85,7 +78,7 @@ export function aturLayarPenuh(): void {
     }
   });
 
-  // Listener sinkronisasi tombol jika pengguna tekan 'Esc'
+
   document.addEventListener("fullscreenchange", () => {
     if (document.fullscreenElement) {
       tombol.textContent = "Keluar Layar Penuh";
@@ -95,7 +88,7 @@ export function aturLayarPenuh(): void {
   });
 }
 
-// Inisialisasi
+
 document.addEventListener("DOMContentLoaded", () => {
   mulaiPolling();
   aturLayarPenuh();

@@ -19,6 +19,7 @@ const namaPrioritas: Record<Prioritas, string> = {
 
 export function terbitkanTiketManual(idJenis: string, prioritas: Prioritas): Tiket {
   const jenis = ambilDaftarJenis().find((j) => j.id === idJenis);
+  console.log(jenis);
   if (!jenis || !jenis.aktif) throw new Error("Jenis antrian tidak aktif atau tidak ditemukan.");
   return buatTiket(idJenis, prioritas);
 }

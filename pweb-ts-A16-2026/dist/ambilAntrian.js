@@ -1,10 +1,5 @@
-// ============================================================
-// ambilAntrian.ts - milik Reyhan
-// Halaman publik (tanpa login). Alur:
-//   baca jenis aktif -> gambar kartu -> klik tombol -> buatTiket()
-//   -> tampilkan nomor -> polling tiap 3 detik supaya jenis baru muncul.
-// ============================================================
 import { ambilJenisAktif, buatTiket } from "./bersama/layananTiket.js";
+import { wajibLogin } from "./bersama/sesi.js";
 const INTERVAL_POLLING_MS = 3000;
 const LABEL_PRIORITAS = {
     normal: "Normal",
@@ -12,15 +7,9 @@ const LABEL_PRIORITAS = {
     disabilitas: "Disabilitas",
     vip: "VIP",
 };
-// Tombol prioritas khusus yang ditampilkan di tiap kartu
-// (prioritas "normal" sudah diwakili tombol utama "Ambil Nomor").
 const PRIORITAS_KHUSUS = ["lansia", "disabilitas", "vip"];
-// Daftar yang sedang tampil + "sidik jari"-nya, untuk mendeteksi perubahan.
 let daftarSaatIni = [];
 let sidikJariDaftar = null;
-// ============================================================
-// BAGIAN 1 - Fungsi pembantu
-// ============================================================
 function ambilElemen(id) {
     const elemen = document.getElementById(id);
     if (!elemen) {
@@ -29,20 +18,11 @@ function ambilElemen(id) {
     return elemen;
 }
 export function apakahPrioritasValid(nilai) {
-    // hasOwn (bukan "in") supaya kata seperti "constructor" tidak lolos.
     return typeof nilai === "string" && Object.hasOwn(LABEL_PRIORITAS, nilai);
 }
-/**
- * Membuat "sidik jari" daftar: hanya field yang tampil di layar.
- * Kalau sidik jari sama dengan sebelumnya, tidak perlu menggambar ulang.
- */
 export function buatSidikJari(daftar) {
     return JSON.stringify(daftar.map((jenis) => [jenis.id, jenis.kode, jenis.nama]));
 }
-// ============================================================
-// BAGIAN 2 - Menggambar kartu
-// ============================================================
-/** Membuat satu elemen tombol dengan data yang dibutuhkan saat diklik. */
 function buatTombol(kelas, teks, idJenis, prioritas) {
     const tombol = document.createElement("button");
     tombol.type = "button";
@@ -52,11 +32,6 @@ function buatTombol(kelas, teks, idJenis, prioritas) {
     tombol.dataset["prioritas"] = prioritas;
     return tombol;
 }
-/**
- * Membuat kartu untuk satu jenis antrian.
- * Memakai createElement + textContent (BUKAN innerHTML) karena nama jenis
- * diketik admin; dengan cara ini teks aneh seperti "<script>" tidak dieksekusi.
- */
 function buatKartuJenis(jenis) {
     const kartu = document.createElement("article");
     kartu.className = "kartu-antrian";
@@ -84,20 +59,16 @@ function buatKartuJenis(jenis) {
     kartu.append(kepala, tombolUtama, label, barisPrioritas);
     return kartu;
 }
-/** Membaca jenis aktif lalu menggambar kartu; dilewati kalau tidak ada perubahan. */
 export function tampilkanKartuJenis() {
     const daftar = ambilJenisAktif();
     const sidikJari = buatSidikJari(daftar);
     if (sidikJari === sidikJariDaftar)
-        return; // tidak ada yang berubah
+        return;
     sidikJariDaftar = sidikJari;
     daftarSaatIni = daftar;
     ambilElemen("daftar-jenis").replaceChildren(...daftar.map(buatKartuJenis));
     ambilElemen("keadaan-kosong").hidden = daftar.length > 0;
 }
-// ============================================================
-// BAGIAN 3 - Mengambil nomor & menampilkan hasil
-// ============================================================
 function tampilkanPesan(pesan) {
     const kotak = ambilElemen("pesan-ambil");
     kotak.textContent = pesan;
@@ -119,7 +90,7 @@ function tampilkanDialogTiket(tiket, namaJenis) {
         dialog.showModal();
     }
     else {
-        dialog.setAttribute("open", ""); // cadangan untuk browser lama
+        dialog.setAttribute("open", "");
     }
     ambilElemen("tombol-tutup-dialog").focus();
 }
@@ -131,30 +102,23 @@ export function tanganiAmbilNomor(idJenis, prioritas) {
         tampilkanDialogTiket(tiket, namaJenis);
     }
     catch (galat) {
-        // Contoh: admin menonaktifkan jenis ini tepat sebelum tombol diklik.
         tampilkanPesan(galat instanceof Error
             ? `${galat.message} Daftar layanan sudah diperbarui.`
             : "Nomor antrian gagal dibuat. Coba lagi.");
-        tampilkanKartuJenis(); // segarkan daftar supaya sesuai kondisi terbaru
+        tampilkanKartuJenis();
     }
 }
-// ============================================================
-// BAGIAN 4 - Pembaruan otomatis (polling) & perekat event
-// ============================================================
 export function mulaiPolling() {
     window.setInterval(tampilkanKartuJenis, INTERVAL_POLLING_MS);
-    // Tab lain (mis. Dashboard Admin) mengubah localStorage -> browser memberi tahu di sini.
     window.addEventListener("storage", tampilkanKartuJenis);
-    // Kembali ke tab ini setelah lama di tab lain -> segarkan langsung.
     document.addEventListener("visibilitychange", () => {
         if (!document.hidden)
             tampilkanKartuJenis();
     });
 }
 function mulai() {
+    wajibLogin();
     tampilkanKartuJenis();
-    // Satu pendengar klik untuk SEMUA tombol (event delegation), jadi tetap
-    // bekerja walaupun kartu digambar ulang oleh polling.
     ambilElemen("daftar-jenis").addEventListener("click", (kejadian) => {
         const sasaran = kejadian.target;
         if (!(sasaran instanceof Element))
@@ -173,7 +137,6 @@ function mulai() {
     });
     mulaiPolling();
 }
-// Hanya berjalan di halaman yang memang punya daftar jenis antrian.
 if (document.getElementById("daftar-jenis")) {
     mulai();
 }

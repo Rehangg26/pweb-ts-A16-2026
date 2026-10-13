@@ -1,8 +1,3 @@
-// ============================================================
-// login.ts - milik Reyhan
-// Alur: isi form -> validasi -> POST ke dummyjson -> tentukan peran
-//       -> simpan sesi -> redirect sesuai peran.
-// ============================================================
 
 import type { Peran, Sesi } from "./bersama/tipe.js";
 import {
@@ -15,11 +10,11 @@ import {
 
 const URL_API = "https://dummyjson.com";
 
-// ---------- Bentuk data dari API ----------
+
 
 interface ResponsLogin {
-  accessToken?: string; // dummyjson versi baru
-  token?: string; // dummyjson versi lama
+  accessToken?: string; 
+  token?: string; 
   firstName?: string;
   role?: unknown;
 }
@@ -28,10 +23,6 @@ interface ResponsProfil {
   role?: unknown;
 }
 
-/**
- * Galat yang pesannya aman ditampilkan langsung ke pengguna.
- * Galat jenis lain (bug kita sendiri) tidak ditampilkan mentah-mentah.
- */
 export class GalatLogin extends Error {
   constructor(pesan: string) {
     super(pesan);
@@ -39,21 +30,12 @@ export class GalatLogin extends Error {
   }
 }
 
-// ============================================================
-// BAGIAN 1 - Logika (tidak menyentuh tampilan)
-// ============================================================
 
-/**
- * Menentukan peran dari objek yang punya field "role".
- * Mengembalikan null kalau role tidak ada / tidak dikenal.
- * Catatan: "moderator" tetap disimpan apa adanya; halaman admin
- * memperlakukannya sama dengan admin lewat wajibPeran(["admin","moderator"]).
- */
+
 export function tentukanPeran(data: { role?: unknown }): Peran | null {
   return apakahPeranValid(data.role) ? data.role : null;
 }
 
-/** Mengambil role lewat GET /auth/me (dipakai kalau respons login tidak memuat role). */
 async function ambilPeranDariProfil(token: string): Promise<Peran | null> {
   let respons: Response;
   try {
@@ -72,12 +54,8 @@ async function ambilPeranDariProfil(token: string): Promise<Peran | null> {
   return tentukanPeran(profil);
 }
 
-/**
- * Proses login lengkap. Mengembalikan Sesi kalau berhasil,
- * melempar GalatLogin (dengan pesan ramah) kalau gagal.
- */
+
 export async function masuk(username: string, password: string): Promise<Sesi> {
-  // 1) Kirim kredensial ke server.
   let respons: Response;
   try {
     respons = await fetch(`${URL_API}/auth/login`, {
@@ -86,11 +64,9 @@ export async function masuk(username: string, password: string): Promise<Sesi> {
       body: JSON.stringify({ username, password }),
     });
   } catch {
-    // fetch hanya "melempar" kalau jaringan putus / server tidak terjangkau.
     throw new GalatLogin("Tidak dapat terhubung ke server. Periksa koneksi internet lalu coba lagi.");
   }
 
-  // 2) Server menjawab, tapi bisa jadi menolak.
   if (respons.status === 400 || respons.status === 401) {
     throw new GalatLogin("Username atau password salah. Periksa lagi lalu coba masuk kembali.");
   }
@@ -104,7 +80,6 @@ export async function masuk(username: string, password: string): Promise<Sesi> {
     throw new GalatLogin("Respons server tidak berisi token. Coba lagi.");
   }
 
-  // 3) Peran: pakai dari respons login kalau ada, kalau tidak tanya /auth/me.
   const peran = tentukanPeran(data) ?? (await ambilPeranDariProfil(token));
   if (!peran) {
     throw new GalatLogin("Peran akun ini tidak dikenali (harus admin, moderator, atau user).");
@@ -112,10 +87,6 @@ export async function masuk(username: string, password: string): Promise<Sesi> {
 
   return { token, peran, namaDepan: data.firstName ?? username };
 }
-
-// ============================================================
-// BAGIAN 2 - Tampilan
-// ============================================================
 
 function ambilElemen<T extends HTMLElement>(id: string): T {
   const elemen = document.getElementById(id);
@@ -125,7 +96,6 @@ function ambilElemen<T extends HTMLElement>(id: string): T {
   return elemen as T;
 }
 
-/** Mengunci/membuka form selama proses login berlangsung. */
 export function aturStatusMemuat(sedangMemuat: boolean): void {
   const tombol = ambilElemen<HTMLButtonElement>("tombol-masuk");
   const inputUsername = ambilElemen<HTMLInputElement>("input-username");
@@ -140,7 +110,7 @@ export function aturStatusMemuat(sedangMemuat: boolean): void {
 
 export function tampilkanPesanError(pesan: string): void {
   const kotak = ambilElemen<HTMLParagraphElement>("pesan-error");
-  kotak.textContent = pesan; // textContent (bukan innerHTML) -> aman dari injeksi HTML
+  kotak.textContent = pesan; 
   kotak.hidden = false;
 }
 
@@ -156,14 +126,11 @@ export function arahkanBerdasarkanPeran(peran: Peran): void {
   pindahKe(halamanTujuanUntuk(peran));
 }
 
-// ============================================================
-// BAGIAN 3 - Perekat: event form
-// ============================================================
 
-let sedangMemproses = false; // mencegah klik ganda mengirim login dua kali
+let sedangMemproses = false; 
 
 async function tanganiKirimForm(kejadian: Event): Promise<void> {
-  kejadian.preventDefault(); // cegah browser memuat ulang halaman
+  kejadian.preventDefault();
 
   if (sedangMemproses) return;
 
@@ -174,7 +141,6 @@ async function tanganiKirimForm(kejadian: Event): Promise<void> {
 
   sembunyikanPesanError();
 
-  // Validasi sederhana di sisi klien sebelum menghubungi server.
   if (!username || !password) {
     tampilkanPesanError("Isi username dan password terlebih dahulu.");
     (username ? inputPassword : inputUsername).focus();
@@ -188,7 +154,6 @@ async function tanganiKirimForm(kejadian: Event): Promise<void> {
     const sesi = await masuk(username, password);
     simpanSesi(sesi);
     arahkanBerdasarkanPeran(sesi.peran);
-    // Sengaja tidak mematikan status memuat: halaman akan segera berpindah.
   } catch (galat) {
     sedangMemproses = false;
     aturStatusMemuat(false);
@@ -199,7 +164,6 @@ async function tanganiKirimForm(kejadian: Event): Promise<void> {
         : "Terjadi kesalahan yang tidak terduga. Muat ulang halaman lalu coba lagi.";
     tampilkanPesanError(pesan);
 
-    // Kosongkan password & kembalikan fokus ke sana supaya bisa langsung mengetik ulang.
     inputPassword.value = "";
     inputPassword.setAttribute("aria-invalid", "true");
     inputPassword.focus();
@@ -207,7 +171,6 @@ async function tanganiKirimForm(kejadian: Event): Promise<void> {
 }
 
 function mulai(): void {
-  // Kalau sudah login, tidak perlu melihat form lagi.
   const sesi = ambilSesi();
   if (sesi) {
     arahkanBerdasarkanPeran(sesi.peran);
@@ -219,8 +182,7 @@ function mulai(): void {
   ambilElemen<HTMLInputElement>("input-username").focus();
 }
 
-// Hanya berjalan di halaman yang memang punya form login
-// (supaya file ini aman diimpor untuk pengujian).
+
 if (document.getElementById("form-masuk")) {
   mulai();
 }

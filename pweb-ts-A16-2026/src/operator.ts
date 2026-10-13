@@ -8,9 +8,7 @@ import {
 } from "./bersama/layananTiket.js";
 import { wajibLogin, keluar, ambilSesi } from "./bersama/sesi.js";
 
-/**
- * Memanggil tiket berikutnya
- */
+
 export function panggilBerikutnya(idJenis: string): void {
   const tiketSaatIni = ambilTiketDipanggil(idJenis);
   if (tiketSaatIni) {
@@ -25,9 +23,7 @@ export function panggilBerikutnya(idJenis: string): void {
   tampilkanPanelOperator();
 }
 
-/**
- * Menandai tiket yang sedang dipanggil sebagai 'selesai'
- */
+
 export function selesaikanTiket(idJenis: string): void {
   const tiketSaatIni = ambilTiketDipanggil(idJenis);
   if (tiketSaatIni) {
@@ -37,9 +33,6 @@ export function selesaikanTiket(idJenis: string): void {
   tampilkanPanelOperator();
 }
 
-/**
- * Menandai tiket yang sedang dipanggil atau tiket berikutnya sebagai 'dilewati'
- */
 export function lewati(idJenis: string): void {
   const tiketSaatIni = ambilTiketDipanggil(idJenis);
   if (tiketSaatIni) {
@@ -54,9 +47,7 @@ export function lewati(idJenis: string): void {
   tampilkanPanelOperator();
 }
 
-/**
- * Render seluruh panel operator ke DOM HTML
- */
+
 export function tampilkanPanelOperator(): void {
   const kontainerPanel = document.getElementById("panel-operator");
   if (!kontainerPanel) return;

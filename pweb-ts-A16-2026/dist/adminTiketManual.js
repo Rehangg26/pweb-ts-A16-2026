@@ -15,6 +15,7 @@ const namaPrioritas = {
 };
 export function terbitkanTiketManual(idJenis, prioritas) {
     const jenis = ambilDaftarJenis().find((j) => j.id === idJenis);
+    console.log(jenis);
     if (!jenis || !jenis.aktif)
         throw new Error("Jenis antrian tidak aktif atau tidak ditemukan.");
     return buatTiket(idJenis, prioritas);
